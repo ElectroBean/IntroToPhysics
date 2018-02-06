@@ -23,7 +23,27 @@ void RigidBody::fixedUpdate(glm::vec2 gravity, float timeStep)
 		applyForce(gravity * m_mass * timeStep);
 		m_position += m_velocity * timeStep;
 
+
+		static float aspectRatio = 16 / 9.f;
+		if (m_position.x > 100)
+		{
+			m_position.x = -100;
+		}
+		if (m_position.x < -100)
+		{
+			m_position.x = 100;
+		}
+		if (m_position.y > 100 / aspectRatio)
+		{
+			m_position.y = -100 / aspectRatio;
+		}
+		if (m_position.y < -100 / aspectRatio)
+		{
+			m_position.y = 100 / aspectRatio;
+		}
 	}
+
+
 
 }
 

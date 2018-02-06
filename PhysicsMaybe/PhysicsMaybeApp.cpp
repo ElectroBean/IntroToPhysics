@@ -78,8 +78,13 @@ void PhysicsMaybeApp::update(float deltaTime) {
 		{
 			if (rocket->getMass() > 0.1f)
 			{
+				srand((unsigned)time(0));
+
+				float r = rand() % 2 + 0.1f;
+				float g = rand() % 2 + 0.1f;
+				float b = rand() % 2 + 0.1f;
 				Sphere* newThing;
-				newThing = new Sphere(glm::vec2(rocket->getPosition().x, rocket->getPosition().y - 7), glm::vec2(0, 0), 5, false, 1, glm::vec4(1, 0, 0, 0.3f));
+				newThing = new Sphere(glm::vec2(rocket->getPosition().x, rocket->getPosition().y - 7), glm::vec2(0, 0), 5, false, 5, glm::vec4(r, g, b, 0.3f));
 				m_physicsScene->addActor(newThing);
 
 				rocket->applyForceToActor(newThing, glm::vec2(0, -50.0f));

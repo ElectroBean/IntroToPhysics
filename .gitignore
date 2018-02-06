@@ -34,6 +34,10 @@
 *.out
 *.app
 
+#AIE exclusion
+!x64/glfw3.lib
+!glfw3.lib
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -75,7 +79,7 @@ $RECYCLE.BIN/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-x64/
+x64/*
 x86/
 bld/
 [Bb]in/
