@@ -28,7 +28,7 @@ void RigidBody::fixedUpdate(glm::vec2 gravity, float timeStep)
 		if (m_position.x > 100)
 		{
 			m_position.x = -100;
-		}
+		} 
 		if (m_position.x < -100)
 		{
 			m_position.x = 100;

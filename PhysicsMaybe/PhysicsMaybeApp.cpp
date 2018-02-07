@@ -45,6 +45,8 @@ bool PhysicsMaybeApp::startup() {
 	glm::vec2 startPos(-40, 0);
 	float inclination = 3.1415f / 4.0f; //45 degrees
 
+	gui = new GUI();
+
 	//m_physicsScene->addActor(new Sphere(startPos, inclination, speed, 1, radius, glm::vec4(1, 0, 0, 1)));
 	//
 	//setupContinuousDemo(glm::vec2(-40, 0), 3.1415f / 4, 30.0f, -9.8f);
@@ -62,8 +64,10 @@ void PhysicsMaybeApp::shutdown() {
 
 
 float Timer = 0.0f;
-float TimeDelay = 0.01f;
+float TimeDelay;
 void PhysicsMaybeApp::update(float deltaTime) {
+
+	gui->update(&TimeDelay);
 
 	// input example
 	aie::Input* input = aie::Input::getInstance();

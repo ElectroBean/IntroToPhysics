@@ -4,6 +4,7 @@
 #include "Renderer2D.h"
 #include "PhysicsScene.h"
 #include "Sphere.h"
+#include "Imgui.h"
 
 class PhysicsMaybeApp : public aie::Application {
 public:
@@ -25,5 +26,6 @@ protected:
 	aie::Font*			m_font;
 
 	Sphere* rocket;
+	GUI* gui;
 	PhysicsScene*		m_physicsScene;
 };
