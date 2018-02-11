@@ -67,7 +67,7 @@ float Timer = 0.0f;
 float TimeDelay;
 void PhysicsMaybeApp::update(float deltaTime) {
 
-	gui->update(&TimeDelay);
+	gui->update(&TimeDelay, m_physicsScene->getGravityP());
 
 	// input example
 	aie::Input* input = aie::Input::getInstance();

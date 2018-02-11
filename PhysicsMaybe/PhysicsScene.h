@@ -20,6 +20,10 @@ public:
 	glm::vec2 getGravity() const { return m_gravity; }
 	void setTimeStep(const float timeStep) { m_timeStep = timeStep; }
 	float getTimeStep() const { return m_timeStep; }
+	glm::vec2* getGravityP() {
+		return &m_gravity;
+	}
+
 protected:
 	glm::vec2 m_gravity;
 	float m_timeStep;
