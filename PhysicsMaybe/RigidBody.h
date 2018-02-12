@@ -1,5 +1,6 @@
 #pragma once
 #include "PhysicsObject.h"
+#include <Gizmos.h>
 
 class RigidBody :
 	public PhysicsObject
@@ -17,6 +18,7 @@ public:
 	glm::vec2 getVelocity() { return m_velocity; }
 	float getMass() { return m_mass; }
 	void changeMass(float massChange);
+	void ResolveCollision(RigidBody * actor2);
 	void setKinematic(bool aInput) { isKinematic = aInput; }
 
 protected:

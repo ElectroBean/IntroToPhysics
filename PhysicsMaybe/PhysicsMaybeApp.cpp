@@ -5,6 +5,8 @@
 #include <glm/ext.hpp>
 #include <Gizmos.h>
 #include "Sphere.h"
+#include "Plane.h"
+#include "AABB.h"
 #include <iostream>
 
 PhysicsMaybeApp::PhysicsMaybeApp() {
@@ -32,13 +34,25 @@ bool PhysicsMaybeApp::startup() {
 	m_physicsScene->setGravity(glm::vec2(0, -9.8f));
 	m_physicsScene->setTimeStep(0.0128f);
 
-	//Sphere* ball;
-	//ball = new Sphere(glm::vec2(-40, 0), glm::vec2(10, 10), 3.0f, 2, glm::vec4(1, 0, 0, 1));
-	//m_physicsScene->addActor(ball);
-	//
-	//Sphere* ball2;
-	//ball2 = new Sphere(glm::vec2(0, 0), glm::vec2(-10, 10), 3.0f, 2, glm::vec4(1, 1, 0, 1));
-	//m_physicsScene->addActor(ball2);
+	Sphere* ball;
+	ball = new Sphere(glm::vec2(-40, 15), glm::vec2(10, 0), 3.0f, false, 5, glm::vec4(1, 0, 0, 1));
+	m_physicsScene->addActor(ball);
+	
+	Sphere* ball2;
+	ball2 = new Sphere(glm::vec2(0, 15), glm::vec2(-10, 0), 3.0f, false, 5, glm::vec4(1, 1, 0, 1));
+	m_physicsScene->addActor(ball2);
+
+	Sphere* ball3;
+	ball3 = new Sphere(glm::vec2(15, 15), glm::vec2(-10, 0), 3.0f, false, 5, glm::vec4(1, 1, 0, 1));
+	m_physicsScene->addActor(ball3);
+
+	Plane* plane1;
+	plane1 = new Plane(glm::vec2(0, 1), -5);
+	m_physicsScene->addActor(plane1);
+
+	AABB* aabb1;
+	aabb1 = new AABB(glm::vec2(10, 10), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, glm::vec4(0, 1, 0, 1));
+	m_physicsScene->addActor(aabb1);
 
 	float radius = 1.0f;
 	float speed = 30;
@@ -50,8 +64,8 @@ bool PhysicsMaybeApp::startup() {
 	//m_physicsScene->addActor(new Sphere(startPos, inclination, speed, 1, radius, glm::vec4(1, 0, 0, 1)));
 	//
 	//setupContinuousDemo(glm::vec2(-40, 0), 3.1415f / 4, 30.0f, -9.8f);
-	rocket = new Sphere(glm::vec2(-40, 0), glm::vec2(12, 10), 100.0f, true, 5, glm::vec4(1, 1, 0, 1));
-	m_physicsScene->addActor(rocket);
+	//rocket = new Sphere(glm::vec2(-40, 0), glm::vec2(12, 10), 100.0f, true, 5, glm::vec4(1, 1, 0, 1));
+	//m_physicsScene->addActor(rocket);
 
 	return true;
 }
@@ -73,32 +87,32 @@ void PhysicsMaybeApp::update(float deltaTime) {
 	aie::Input* input = aie::Input::getInstance();
 	Timer -= deltaTime;
 
-	setupContinuousDemo(rocket->getPosition(), 3.1415f / 4, 30.0f, -9.8f);
+	//setupContinuousDemo(rocket->getPosition(), 3.1415f / 4, 30.0f, -9.8f);
 
-	if (input->isKeyDown(32))
-	{
-		rocket->setKinematic(false);
-		if (Timer <= 0)
-		{
-			if (rocket->getMass() > 0.1f)
-			{
-				srand((unsigned)time(0));
-
-				float r = rand() % 2 + 0.1f;
-				float g = rand() % 2 + 0.1f;
-				float b = rand() % 2 + 0.1f;
-				Sphere* newThing;
-				newThing = new Sphere(glm::vec2(rocket->getPosition().x, rocket->getPosition().y - 7), glm::vec2(0, 0), 5, false, 5, glm::vec4(r, g, b, 0.3f));
-				m_physicsScene->addActor(newThing);
-
-				rocket->applyForceToActor(newThing, glm::vec2(0, -50.0f));
-				rocket->changeMass(-0.1f);
-
-				Timer = TimeDelay;
-			}
-		}
-
-	}
+	//if (input->isKeyDown(32))
+	//{
+	//	rocket->setKinematic(false);
+	//	if (Timer <= 0)
+	//	{
+	//		if (rocket->getMass() > 0.1f)
+	//		{
+	//			srand((unsigned)time(0));
+	//
+	//			float r = rand() % 2 + 0.1f;
+	//			float g = rand() % 2 + 0.1f;
+	//			float b = rand() % 2 + 0.1f;
+	//			Sphere* newThing;
+	//			newThing = new Sphere(glm::vec2(rocket->getPosition().x, rocket->getPosition().y - 7), glm::vec2(0, 0), 5, false, 5, glm::vec4(r, g, b, 0.3f));
+	//			m_physicsScene->addActor(newThing);
+	//
+	//			rocket->applyForceToActor(newThing, glm::vec2(0, -50.0f));
+	//			rocket->changeMass(-0.1f);
+	//
+	//			Timer = TimeDelay;
+	//		}
+	//	}
+	//
+	//}
 
 	//clear gizmo
 	aie::Gizmos::clear();
