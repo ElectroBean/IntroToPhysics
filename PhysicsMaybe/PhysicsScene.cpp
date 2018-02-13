@@ -194,22 +194,26 @@ bool PhysicsScene::plane2aabb(PhysicsObject *obj1, PhysicsObject *obj2)
 	
 	if (glm::dot(bottomLeft, glm::normalize(plane->getNormal())) - plane->getDistance() < 0)
 	{
-		aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
+		//aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
+		plane->ResolveCollision(aabb);
 		std::cout << "plane collision";
 	}
 	else if (glm::dot(bottomRight, glm::normalize(plane->getNormal())) - plane->getDistance() < 0)
 	{
-		aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
+		//aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
+		plane->ResolveCollision(aabb);
 		std::cout << "plane collision";
 	}
 	else if (glm::dot(topLeft, glm::normalize(plane->getNormal())) - plane->getDistance() < 0)
 	{
-		aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
+		//aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
+		plane->ResolveCollision(aabb);
 		std::cout << "plane collision";
 	}
 	else if (glm::dot(topRight, glm::normalize(plane->getNormal())) - plane->getDistance() < 0)
 	{
-		aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
+		//aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
+		plane->ResolveCollision(aabb);
 		std::cout << "plane collision";
 	}
 	
@@ -235,7 +239,7 @@ bool PhysicsScene::sphere2Plane(PhysicsObject *obj1, PhysicsObject *obj2)
 		if (intersection > 0)
 		{
 			//set sphere velocity to zero here 
-			sphere->applyForce(glm::vec2(0, sphere->getVelocity().y * -6));
+			plane->ResolveCollision(sphere);
 			return true;
 		}
 	}

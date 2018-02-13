@@ -35,7 +35,7 @@ void RigidBody::fixedUpdate(glm::vec2 gravity, float timeStep)
 		}
 		if (m_position.y > 100 / aspectRatio)
 		{
-			m_position.y = -100 / aspectRatio;
+			m_velocity.y *= -1.0f;
 		}
 		if (m_position.y < -100 / aspectRatio)
 		{

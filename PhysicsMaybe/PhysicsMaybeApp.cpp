@@ -83,6 +83,8 @@ void PhysicsMaybeApp::shutdown() {
 
 float Timer = 0.0f;
 float TimeDelay;
+float spawnTimer = 0.0f;
+float spawnDelay = 1.5f;
 void PhysicsMaybeApp::update(float deltaTime) {
 
 	gui->update(&TimeDelay, m_physicsScene->getGravityP());
@@ -91,10 +93,16 @@ void PhysicsMaybeApp::update(float deltaTime) {
 	aie::Input* input = aie::Input::getInstance();
 	Timer -= deltaTime;
 
+	spawnTimer -= deltaTime;
+
 	if (input->wasMouseButtonPressed(1))
 	{
-		AABB* newAABB = new AABB(glm::vec2(-20, 20), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, glm::vec4(1, 0, 0, 1));
-		m_physicsScene->addActor(newAABB);
+		if (spawnTimer < 0)
+		{
+			Sphere* newSphere = new Sphere(glm::vec2(-50, 20), glm::vec2(10, 0), 10.0f, false, 5.0f, glm::vec4(1, 0, 0, 1));
+			m_physicsScene->addActor(newSphere);
+			spawnTimer = spawnDelay;
+		}
 	}
 
 	//setupContinuousDemo(rocket->getPosition(), 3.1415f / 4, 30.0f, -9.8f);
