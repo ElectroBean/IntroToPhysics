@@ -2,6 +2,7 @@
 #include <glm/ext.hpp>
 #include <vector>
 #include "PhysicsObject.h"
+#include "Imgui.h"
 
 class PhysicsScene
 {
@@ -27,16 +28,30 @@ public:
 	static bool plane2Plane(PhysicsObject*, PhysicsObject*);
 	static bool plane2Sphere(PhysicsObject*, PhysicsObject*);
 	static bool plane2Box(PhysicsObject*, PhysicsObject*);
+	static bool plane2aabb(PhysicsObject *, PhysicsObject *);
 	static bool sphere2Plane(PhysicsObject*, PhysicsObject*);
 	static bool sphere2Sphere(PhysicsObject*, PhysicsObject*);
 	static bool sphere2Box(PhysicsObject*, PhysicsObject*);
+	static bool sphere2aabb(PhysicsObject *, PhysicsObject *);
 	static bool box2Plane(PhysicsObject*, PhysicsObject*);
 	static bool box2Sphere(PhysicsObject*, PhysicsObject*);
 	static bool box2Box(PhysicsObject*, PhysicsObject*);
+
+	static bool box2aabb(PhysicsObject *, PhysicsObject *);
+	
+	static bool aabb2Plane(PhysicsObject *, PhysicsObject *);
+	
+	static bool aabb2Sphere(PhysicsObject *, PhysicsObject *);
+	
+	static bool aabb2Box(PhysicsObject *, PhysicsObject *);
+	
+	static bool aabb2aabb(PhysicsObject *, PhysicsObject *);
 
 protected:
 	glm::vec2 m_gravity;
 	float m_timeStep;
 	std::vector<PhysicsObject*> m_actors;
+
+	float asdasd[2] = { 0, 0 };
 };
 

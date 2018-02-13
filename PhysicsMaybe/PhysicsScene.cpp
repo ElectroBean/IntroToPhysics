@@ -4,6 +4,11 @@
 #include <iostream>
 #include "Sphere.h"
 #include "Plane.h"
+#include "AABB.h"
+#include "Imgui.h"
+#include <glm\ext.hpp>
+#include <imgui.h>
+#include <gl_core_4_4.h>
 
 PhysicsScene::PhysicsScene()
 {
@@ -42,6 +47,11 @@ void PhysicsScene::update(float dt)
 {
 	static std::list<PhysicsObject*> dirty;
 
+	ImGui::Begin("Physics Options");
+	ImGui::SliderFloat2("Gravity", asdasd, -9.8f, 9.8f);
+	ImGui::SliderFloat("Physics Time Step", &m_timeStep, 0.001f, 1.0f);
+	m_gravity = glm::vec2(asdasd[0], asdasd[1]);
+	ImGui::End();
 
 	// update physics at a fixed time step
 	static float accumulatedTime = 0.0f;
@@ -106,9 +116,10 @@ typedef bool(*fn)(PhysicsObject*, PhysicsObject*);
 
 static fn collisionFunctionArray[] =
 {
-	PhysicsScene::plane2Plane, PhysicsScene::plane2Sphere, PhysicsScene::plane2Box,
-	PhysicsScene::sphere2Plane, PhysicsScene::sphere2Sphere, PhysicsScene::plane2Box,
-	PhysicsScene::box2Plane, PhysicsScene::box2Sphere, PhysicsScene::box2Box,
+	PhysicsScene::plane2Plane, PhysicsScene::plane2Sphere, PhysicsScene::plane2Box, PhysicsScene::plane2aabb,
+	PhysicsScene::sphere2Plane, PhysicsScene::sphere2Sphere, PhysicsScene::plane2Box, PhysicsScene::sphere2aabb,
+	PhysicsScene::box2Plane, PhysicsScene::box2Sphere, PhysicsScene::box2Box, PhysicsScene::box2aabb,
+	PhysicsScene::aabb2Plane, PhysicsScene::aabb2Sphere, PhysicsScene::aabb2Box, PhysicsScene::aabb2aabb,
 };
 
 void PhysicsScene::checkForCollision()
@@ -141,13 +152,68 @@ bool PhysicsScene::plane2Plane(PhysicsObject *, PhysicsObject *)
 	return false;
 }
 
-bool PhysicsScene::plane2Sphere(PhysicsObject *, PhysicsObject *)
+bool PhysicsScene::plane2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
 {
-	return false;
+	return sphere2Plane(obj2, obj1);
 }
 
 bool PhysicsScene::plane2Box(PhysicsObject *, PhysicsObject *)
 {
+	return false;
+}
+
+bool PhysicsScene::plane2aabb(PhysicsObject *obj1, PhysicsObject *obj2)
+{
+	Plane *plane = dynamic_cast<Plane*>(obj1);
+	AABB *aabb = dynamic_cast<AABB*>(obj2);
+
+	//if we are successful then test for collision 
+	//if (plane != nullptr && aabb != nullptr)
+	//{
+	//	//check collision
+	//	glm::vec2 posExt = glm::vec2((aabb->getPosition().x + aabb->getExtents().x), (aabb->getPosition().y, aabb->getExtents().y)) - aabb->getPosition();
+	//
+	//	glm::vec2 planeNormalize = glm::normalize(plane->getNormal());
+	//
+	//	float r = posExt.x * abs(planeNormalize.x) + posExt.y * abs(planeNormalize.y);
+	//	float s = glm::dot(planeNormalize, aabb->getPosition()) - plane->getDistance();
+	//
+	//	if (abs(s) <= r)
+	//	{
+	//		aabb->setVelocity(glm::vec2(aabb->getVelocity().x * -1, aabb->getVelocity().y * -1));
+	//		return true;
+	//	}
+	//}
+
+	//get vertices of aabb
+	glm::vec2 bottomLeft = glm::vec2(aabb->getPosition().x - aabb->getExtents().x, aabb->getPosition().y - aabb->getExtents().y);
+	glm::vec2 bottomRight = glm::vec2(aabb->getPosition().x + aabb->getExtents().x, aabb->getPosition().y - aabb->getExtents().y);
+	glm::vec2 topLeft = glm::vec2(aabb->getPosition().x - aabb->getExtents().x, aabb->getPosition().y + aabb->getExtents().y);
+	glm::vec2 topRight = glm::vec2(aabb->getPosition().x + aabb->getExtents().x, aabb->getPosition().y + aabb->getExtents().y);
+	
+	
+	if (glm::dot(bottomLeft, glm::normalize(plane->getNormal())) - plane->getDistance() < 0)
+	{
+		aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
+		std::cout << "plane collision";
+	}
+	else if (glm::dot(bottomRight, glm::normalize(plane->getNormal())) - plane->getDistance() < 0)
+	{
+		aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
+		std::cout << "plane collision";
+	}
+	else if (glm::dot(topLeft, glm::normalize(plane->getNormal())) - plane->getDistance() < 0)
+	{
+		aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
+		std::cout << "plane collision";
+	}
+	else if (glm::dot(topRight, glm::normalize(plane->getNormal())) - plane->getDistance() < 0)
+	{
+		aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
+		std::cout << "plane collision";
+	}
+	
+
 	return false;
 }
 
@@ -204,6 +270,11 @@ bool PhysicsScene::sphere2Box(PhysicsObject *, PhysicsObject *)
 	return false;
 }
 
+bool PhysicsScene::sphere2aabb(PhysicsObject *obj1, PhysicsObject *obj2)
+{
+	return aabb2Sphere(obj2, obj1);
+}
+
 bool PhysicsScene::box2Plane(PhysicsObject *, PhysicsObject *)
 {
 	return false;
@@ -218,3 +289,63 @@ bool PhysicsScene::box2Box(PhysicsObject *, PhysicsObject *)
 {
 	return false;
 }
+
+bool PhysicsScene::box2aabb(PhysicsObject *, PhysicsObject *)
+{
+	return false;
+}
+
+bool PhysicsScene::aabb2Plane(PhysicsObject *, PhysicsObject *)
+{
+	return false;
+}
+
+bool PhysicsScene::aabb2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
+{
+	AABB *aabb = dynamic_cast<AABB*>(obj1);
+	Sphere *sphere = dynamic_cast<Sphere*>(obj2);
+	
+	//if we are successful then test for collision 
+	if (aabb != nullptr && sphere != nullptr)
+	{
+		glm::vec2 A = glm::clamp(sphere->getPosition(), aabb->getMin(), aabb->getMax());
+		glm::vec2 V = A - sphere->getPosition();
+
+		if (glm::length(V) <= sphere->getRadius())
+		{
+			aabb->ResolveCollision(sphere);
+		}
+	}
+	return false;
+}
+
+bool PhysicsScene::aabb2Box(PhysicsObject *, PhysicsObject *)
+{
+	return false;
+}
+
+bool PhysicsScene::aabb2aabb(PhysicsObject *obj1, PhysicsObject *obj2)
+{
+	AABB *aabb1 = dynamic_cast<AABB*>(obj1);
+	AABB *aabb2 = dynamic_cast<AABB*>(obj2);
+
+	//if we are successful then test for collision 
+	if (aabb1 != nullptr && aabb2 != nullptr)
+	{
+		//check collision
+		glm::vec2 min1 = glm::vec2((aabb1->getPosition().x - aabb1->getExtents().x), (aabb1->getPosition().y - aabb1->getExtents().y));
+		glm::vec2 max1 = glm::vec2((aabb1->getPosition().x + aabb1->getExtents().x), (aabb1->getPosition().y + aabb1->getExtents().y));
+		glm::vec2 min2 = glm::vec2((aabb2->getPosition().x - aabb2->getExtents().x), (aabb2->getPosition().y - aabb2->getExtents().y));
+		glm::vec2 max2 = glm::vec2((aabb2->getPosition().x + aabb2->getExtents().x), (aabb2->getPosition().y + aabb2->getExtents().y));
+
+		bool collision = (max1.x < min2.x || max2.x < min1.x || max1.y < min2.y || max2.y < min1.y);
+		if(!collision)
+		{	
+			aabb1->ResolveCollision(aabb2);
+		}
+	}
+	return false;
+}
+
+
+

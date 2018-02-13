@@ -30,8 +30,6 @@ void GUI::update(float* exhaustTimer, glm::vec2* gravity)
 	//glClearColor(m_clearColour.r, m_clearColour.g, m_clearColour.b, 1);
 	ImGui::ColorEdit3("clear colour", glm::value_ptr(m_clearColour));
 	ImGui::SliderFloat("Physics Tick Rate", exhaustTimer, 0.01f, 0.1f);
-	ImGui::SliderFloat2("Gravity", asdasd, 0, -9.8f * 3);
-	gravity = new glm::vec2(asdasd[1], asdasd[2]);
 	ImGui::End();
 }
 

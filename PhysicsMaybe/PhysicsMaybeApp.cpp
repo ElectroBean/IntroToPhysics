@@ -43,16 +43,20 @@ bool PhysicsMaybeApp::startup() {
 	m_physicsScene->addActor(ball2);
 
 	Sphere* ball3;
-	ball3 = new Sphere(glm::vec2(15, 15), glm::vec2(-10, 0), 3.0f, false, 5, glm::vec4(1, 1, 0, 1));
+	ball3 = new Sphere(glm::vec2(15, 20), glm::vec2(-10, 0), 3.0f, false, 5, glm::vec4(1, 1, 0, 1));
 	m_physicsScene->addActor(ball3);
 
 	Plane* plane1;
-	plane1 = new Plane(glm::vec2(0, 1), -5);
+	plane1 = new Plane(glm::vec2(0, 1), -25);
 	m_physicsScene->addActor(plane1);
 
 	AABB* aabb1;
 	aabb1 = new AABB(glm::vec2(10, 10), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, glm::vec4(0, 1, 0, 1));
 	m_physicsScene->addActor(aabb1);
+
+	AABB* aabb2;
+	aabb2 = new AABB(glm::vec2(10, 40), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, glm::vec4(0, 1, 0, 1));
+	m_physicsScene->addActor(aabb2);
 
 	float radius = 1.0f;
 	float speed = 30;
@@ -86,6 +90,12 @@ void PhysicsMaybeApp::update(float deltaTime) {
 	// input example
 	aie::Input* input = aie::Input::getInstance();
 	Timer -= deltaTime;
+
+	if (input->wasMouseButtonPressed(1))
+	{
+		AABB* newAABB = new AABB(glm::vec2(-20, 20), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, glm::vec4(1, 0, 0, 1));
+		m_physicsScene->addActor(newAABB);
+	}
 
 	//setupContinuousDemo(rocket->getPosition(), 3.1415f / 4, 30.0f, -9.8f);
 

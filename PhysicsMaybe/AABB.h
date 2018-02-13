@@ -10,6 +10,9 @@ public:
 	void makeGizmo();
 
 	bool checkCollision(PhysicsObject * pOther);
+	glm::vec2 getExtents() { return extents; }
+	glm::vec2 getMax() { return this->getPosition() + this->getExtents(); }
+	glm::vec2 getMin() { return this->getPosition() - this->getExtents(); }
 
 private: 
 	glm::vec2 extents;

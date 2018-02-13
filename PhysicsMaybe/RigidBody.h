@@ -20,6 +20,7 @@ public:
 	void changeMass(float massChange);
 	void ResolveCollision(RigidBody * actor2);
 	void setKinematic(bool aInput) { isKinematic = aInput; }
+	void setVelocity(glm::vec2 velocity) { m_velocity = velocity; }
 
 protected:
 	glm::vec2 m_position;
