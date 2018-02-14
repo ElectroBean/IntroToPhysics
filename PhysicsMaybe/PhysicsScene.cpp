@@ -167,24 +167,6 @@ bool PhysicsScene::plane2aabb(PhysicsObject *obj1, PhysicsObject *obj2)
 	Plane *plane = dynamic_cast<Plane*>(obj1);
 	AABB *aabb = dynamic_cast<AABB*>(obj2);
 
-	//if we are successful then test for collision 
-	//if (plane != nullptr && aabb != nullptr)
-	//{
-	//	//check collision
-	//	glm::vec2 posExt = glm::vec2((aabb->getPosition().x + aabb->getExtents().x), (aabb->getPosition().y, aabb->getExtents().y)) - aabb->getPosition();
-	//
-	//	glm::vec2 planeNormalize = glm::normalize(plane->getNormal());
-	//
-	//	float r = posExt.x * abs(planeNormalize.x) + posExt.y * abs(planeNormalize.y);
-	//	float s = glm::dot(planeNormalize, aabb->getPosition()) - plane->getDistance();
-	//
-	//	if (abs(s) <= r)
-	//	{
-	//		aabb->setVelocity(glm::vec2(aabb->getVelocity().x * -1, aabb->getVelocity().y * -1));
-	//		return true;
-	//	}
-	//}
-
 	//get vertices of aabb
 	glm::vec2 bottomLeft = glm::vec2(aabb->getPosition().x - aabb->getExtents().x, aabb->getPosition().y - aabb->getExtents().y);
 	glm::vec2 bottomRight = glm::vec2(aabb->getPosition().x + aabb->getExtents().x, aabb->getPosition().y - aabb->getExtents().y);
@@ -192,32 +174,27 @@ bool PhysicsScene::plane2aabb(PhysicsObject *obj1, PhysicsObject *obj2)
 	glm::vec2 topRight = glm::vec2(aabb->getPosition().x + aabb->getExtents().x, aabb->getPosition().y + aabb->getExtents().y);
 	
 	
-	if (glm::dot(bottomLeft, glm::normalize(plane->getNormal())) - plane->getDistance() < 0)
+	if (glm::dot(bottomLeft, plane->getNormal()) - plane->getDistance() < 0)
 	{
-		//aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
 		plane->ResolveCollision(aabb);
-		std::cout << "plane collision";
+		//aabb->setVelocity(glm::vec2(0, 0));
 	}
-	else if (glm::dot(bottomRight, glm::normalize(plane->getNormal())) - plane->getDistance() < 0)
+	else if (glm::dot(bottomRight, plane->getNormal()) - plane->getDistance() < 0)
 	{
-		//aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
 		plane->ResolveCollision(aabb);
-		std::cout << "plane collision";
+		//aabb->setVelocity(glm::vec2(0, 0));
 	}
-	else if (glm::dot(topLeft, glm::normalize(plane->getNormal())) - plane->getDistance() < 0)
+	else if (glm::dot(topLeft, plane->getNormal()) - plane->getDistance() < 0)
 	{
-		//aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
 		plane->ResolveCollision(aabb);
-		std::cout << "plane collision";
+		//aabb->setVelocity(glm::vec2(0, 0));
 	}
-	else if (glm::dot(topRight, glm::normalize(plane->getNormal())) - plane->getDistance() < 0)
+	else if (glm::dot(topRight, plane->getNormal()) - plane->getDistance() < 0)
 	{
-		//aabb->setVelocity(glm::vec2(aabb->getVelocity().x, aabb->getVelocity().y * -1));
 		plane->ResolveCollision(aabb);
-		std::cout << "plane collision";
+		//aabb->setVelocity(glm::vec2(0, 0));
 	}
 	
-
 	return false;
 }
 
@@ -240,6 +217,7 @@ bool PhysicsScene::sphere2Plane(PhysicsObject *obj1, PhysicsObject *obj2)
 		{
 			//set sphere velocity to zero here 
 			plane->ResolveCollision(sphere);
+			//sphere->setVelocity(glm::vec2(0, 0));
 			return true;
 		}
 	}
@@ -262,6 +240,8 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
 		if (mag < radiiSum)
 		{
 			//apply forces to actors
+
+
 			sphere1->ResolveCollision(sphere2);
 			return true;
 		}
@@ -317,6 +297,8 @@ bool PhysicsScene::aabb2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
 
 		if (glm::length(V) <= sphere->getRadius())
 		{
+			glm::vec2 normal = glm::normalize(V);
+			sphere->setPosition(sphere->getPosition() - normal);
 			aabb->ResolveCollision(sphere);
 		}
 	}

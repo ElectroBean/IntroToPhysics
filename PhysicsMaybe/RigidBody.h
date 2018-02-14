@@ -6,7 +6,7 @@ class RigidBody :
 	public PhysicsObject
 {
 public:
-	RigidBody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity, float rotation, float mass, bool kinematic);
+	RigidBody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity, float rotation, float mass, bool kinematic, float linearDrag, float angularDrag, float elasticity);
 	~RigidBody();
 	virtual void fixedUpdate(glm::vec2 gravity, float timeStep);
 	virtual void debug();
@@ -21,6 +21,12 @@ public:
 	void ResolveCollision(RigidBody * actor2);
 	void setKinematic(bool aInput) { isKinematic = aInput; }
 	void setVelocity(glm::vec2 velocity) { m_velocity = velocity; }
+	float getLinearDrag() { return m_linearDrag; }
+	void setLinearDrag(float drag) { m_linearDrag = drag; }
+	float getAngularDrag() { return m_angularDrag; }
+	void setAngularDrag(float drag) { m_angularDrag = drag; }
+	float getElasticity() { return m_elasticity; }
+	void setPosition(glm::vec2 position) { m_position = position; }
 
 protected:
 	glm::vec2 m_position;
@@ -28,4 +34,9 @@ protected:
 	float m_mass;
 	float m_rotation; //2D so we only need a single float to represent our rotation
 	bool isKinematic;
+
+	float m_elasticity;
+
+	float m_linearDrag;
+	float m_angularDrag;
 };

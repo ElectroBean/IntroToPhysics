@@ -35,27 +35,27 @@ bool PhysicsMaybeApp::startup() {
 	m_physicsScene->setTimeStep(0.0128f);
 
 	Sphere* ball;
-	ball = new Sphere(glm::vec2(-40, 15), glm::vec2(10, 0), 3.0f, false, 5, glm::vec4(1, 0, 0, 1));
+	ball = new Sphere(glm::vec2(-40, 15), glm::vec2(10, 0), 3.0f, false, 5, 0.2f, 0.2f, 1.0f, glm::vec4(1, 0, 0, 1));
 	m_physicsScene->addActor(ball);
 	
 	Sphere* ball2;
-	ball2 = new Sphere(glm::vec2(0, 15), glm::vec2(-10, 0), 3.0f, false, 5, glm::vec4(1, 1, 0, 1));
+	ball2 = new Sphere(glm::vec2(0, 15), glm::vec2(-10, 0), 3.0f, false, 5, 0.2f, 0.2f, 1.0f, glm::vec4(1, 1, 0, 1));
 	m_physicsScene->addActor(ball2);
 
 	Sphere* ball3;
-	ball3 = new Sphere(glm::vec2(15, 20), glm::vec2(-10, 0), 3.0f, false, 5, glm::vec4(1, 1, 0, 1));
+	ball3 = new Sphere(glm::vec2(15, 20), glm::vec2(-10, 0), 3.0f, false, 5, 0.2f, 0.2f, 1.0f, glm::vec4(1, 1, 0, 1));
 	m_physicsScene->addActor(ball3);
 
 	Plane* plane1;
-	plane1 = new Plane(glm::vec2(0, 1), -25);
+	plane1 = new Plane(glm::vec2(10, 1), 0);
 	m_physicsScene->addActor(plane1);
 
 	AABB* aabb1;
-	aabb1 = new AABB(glm::vec2(10, 10), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, glm::vec4(0, 1, 0, 1));
+	aabb1 = new AABB(glm::vec2(10, 10), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, 0.2f, 0.2f, 1.0f, glm::vec4(0, 1, 0, 1));
 	m_physicsScene->addActor(aabb1);
 
 	AABB* aabb2;
-	aabb2 = new AABB(glm::vec2(10, 40), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, glm::vec4(0, 1, 0, 1));
+	aabb2 = new AABB(glm::vec2(10, 40), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, 0.2f, 0.2f, 1.0f, glm::vec4(0, 1, 0, 1));
 	m_physicsScene->addActor(aabb2);
 
 	float radius = 1.0f;
@@ -78,6 +78,8 @@ void PhysicsMaybeApp::shutdown() {
 
 	delete m_font;
 	delete m_2dRenderer;
+	aie::Gizmos::destroy(); 
+	delete ball;
 }
 
 
@@ -99,7 +101,7 @@ void PhysicsMaybeApp::update(float deltaTime) {
 	{
 		if (spawnTimer < 0)
 		{
-			Sphere* newSphere = new Sphere(glm::vec2(-50, 20), glm::vec2(10, 0), 10.0f, false, 5.0f, glm::vec4(1, 0, 0, 1));
+			Sphere* newSphere = new Sphere(glm::vec2(-50, 20), glm::vec2(10, 0), 10.0f, false, 5.0f, 0.2f, 0.2f, 1.0f, glm::vec4(1, 0, 0, 1));
 			m_physicsScene->addActor(newSphere);
 			spawnTimer = spawnDelay;
 		}

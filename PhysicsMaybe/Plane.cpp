@@ -6,12 +6,13 @@ Plane::Plane() : PhysicsObject(ShapeType::PLANE)
 { 
 	m_distanceToOrigin = 0;
 	m_normal = glm::vec2(0, 1); 
+
 }
 
 Plane::Plane(glm::vec2 normal, float distance) : PhysicsObject(ShapeType::PLANE)
 {
 	m_distanceToOrigin = distance;
-	m_normal = normal;
+	m_normal = glm::normalize(normal);
 }
 
 Plane::~Plane()
@@ -43,6 +44,8 @@ void Plane::resetPosition()
 
 void Plane::ResolveCollision(RigidBody * actor2)
 {
+
+
 	glm::vec2 normal = m_normal;
 	glm::vec2 relativeVelocity = actor2->getVelocity();
 	float elasticity = 1;
