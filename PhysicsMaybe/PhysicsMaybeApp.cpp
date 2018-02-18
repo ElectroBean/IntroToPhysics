@@ -79,7 +79,7 @@ void PhysicsMaybeApp::shutdown() {
 	delete m_font;
 	delete m_2dRenderer;
 	aie::Gizmos::destroy(); 
-	delete ball;
+	delete gui;
 }
 
 
