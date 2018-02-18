@@ -27,7 +27,7 @@ void GUI::update(float* exhaustTimer, glm::vec2* gravity)
 
 		m_clearColour = glm::vec4(r, g, b, 1);
 	}
-	glClearColor(m_clearColour.r, m_clearColour.g, m_clearColour.b, 1);
+	//glClearColor(m_clearColour.r, m_clearColour.g, m_clearColour.b, 1);
 	ImGui::ColorEdit3("clear colour", glm::value_ptr(m_clearColour));
 	//ImGui::SliderFloat("Rocket Exhaust Timer", exhaustTimer, 0.01f, 0.1f);
 	ImGui::End();

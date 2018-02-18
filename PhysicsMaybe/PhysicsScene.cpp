@@ -13,7 +13,7 @@
 PhysicsScene::PhysicsScene()
 {
 	setTimeStep(0.01f);
-	setGravity(glm::vec2(0, 0));
+	setGravity(glm::vec2(-9.8f, 0));
 }
 
 
@@ -297,8 +297,8 @@ bool PhysicsScene::aabb2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
 
 		if (glm::length(V) <= sphere->getRadius())
 		{
-			glm::vec2 normal = glm::normalize(V);
-			sphere->setPosition(sphere->getPosition() - normal);
+			//glm::vec2 normal = glm::normalize(V);
+			//sphere->setPosition(sphere->getPosition() - normal);
 			aabb->ResolveCollision(sphere);
 		}
 	}

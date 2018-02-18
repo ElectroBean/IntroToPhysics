@@ -47,8 +47,12 @@ bool PhysicsMaybeApp::startup() {
 	m_physicsScene->addActor(ball3);
 
 	Plane* plane1;
-	plane1 = new Plane(glm::vec2(10, 1), 0);
+	plane1 = new Plane(glm::vec2(0.8f, 1), -20);
 	m_physicsScene->addActor(plane1);
+
+	Plane* plane2;
+	plane2 = new Plane(glm::vec2(-0.8f, 1), -20);
+	m_physicsScene->addActor(plane2);
 
 	AABB* aabb1;
 	aabb1 = new AABB(glm::vec2(10, 10), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, 0.2f, 0.2f, 1.0f, glm::vec4(0, 1, 0, 1));
@@ -79,7 +83,6 @@ void PhysicsMaybeApp::shutdown() {
 	delete m_font;
 	delete m_2dRenderer;
 	aie::Gizmos::destroy(); 
-	delete ball;
 }
 
 
