@@ -217,7 +217,7 @@ bool PhysicsScene::sphere2Plane(PhysicsObject *obj1, PhysicsObject *obj2)
 		if (intersection > 0)
 		{
 			glm::vec2 contact = sphere->getPosition() + (collisionNormal * -sphere->getRadius());
-			sphere->setPosition(sphere->getPosition() + plane->getNormal() * intersection);
+			sphere->setPosition(sphere->getPosition() + plane->getNormal() * (sphere->getRadius() - sphereToPlane));
 			plane->ResolveCollision(sphere, contact);
 			return true;
 		}
@@ -256,11 +256,17 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
 			//sphere1->setPosition(sphere1->getPosition() + ov);
 			//sphere2->setPosition(sphere1->getPosition() - ov);
 
-			glm::vec2 movementVec = sphere2->getPosition() - sphere1->getPosition();
-			movementVec = glm::normalize(movementVec);
-			float distfromobj = radiiSum - mag;
-			sphere1->setPosition(sphere1->getPosition() - movementVec * distfromobj * 0.5f);
-			sphere2->setPosition(sphere2->getPosition() + movementVec * distfromobj * 0.5f);
+			//glm::vec2 movementVec = sphere2->getPosition() - sphere1->getPosition();
+			//movementVec = glm::normalize(movementVec);
+			//float distfromobj = radiiSum - mag;
+			//sphere1->setPosition(sphere1->getPosition() - movementVec * distfromobj * 0.5f);
+			//sphere2->setPosition(sphere2->getPosition() + movementVec * distfromobj * 0.5f);
+
+			glm::vec2 contactForce = 0.5f * (mag - (sphere1->getRadius() + sphere2->getRadius())) * direction / mag;
+
+			sphere1->setPosition(sphere1->getPosition() + contactForce); 
+			sphere2->setPosition(sphere2->getPosition() - contactForce);
+
 
 			//apply forces to actors
 			sphere1->ResolveCollision(sphere2, 0.5f * (sphere1->getPosition() + sphere2->getPosition()));
