@@ -11,6 +11,8 @@ Sphere::Sphere(glm::vec2 position, glm::vec2 velocity, float mass, bool kinemati
 	this->m_linearDrag = linearDrag;
 	this->m_angularDrag = angularDrag;
 	this->m_elasticity = elasticity;
+	this->m_moment = 0.5f * m_mass * m_radius * m_radius;
+	m_angularVelocity = 0.0f;
 }
 
 Sphere::~Sphere()
@@ -19,7 +21,10 @@ Sphere::~Sphere()
 
 void Sphere::makeGizmo()
 {
+	glm::vec2 end = glm::vec2(std::cos(m_rotation), std::sin(m_rotation)) * m_radius; 
+
 	aie::Gizmos::add2DCircle(m_position, m_radius, 16, m_colour);
+	aie::Gizmos::add2DLine(m_position, m_position + end, glm::vec4(1, 1, 1, 1));
 }
 
 bool Sphere::checkCollision(PhysicsObject * pOther)

@@ -163,6 +163,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
+    <ClCompile Include="Box.cpp" />
     <ClCompile Include="Imgui.cpp" />
     <ClCompile Include="PhysicsMaybeApp.cpp" />
     <ClCompile Include="main.cpp" />
@@ -174,6 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
+    <ClInclude Include="Box.h" />
     <ClInclude Include="Imgui.h" />
     <ClInclude Include="PhysicsMaybeApp.h" />
     <ClInclude Include="PhysicsObject.h" />

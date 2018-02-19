@@ -7,6 +7,7 @@
 #include "Sphere.h"
 #include "Plane.h"
 #include "AABB.h"
+#include "Box.h"
 #include <iostream>
 
 PhysicsMaybeApp::PhysicsMaybeApp() {
@@ -34,29 +35,45 @@ bool PhysicsMaybeApp::startup() {
 	m_physicsScene->setGravity(glm::vec2(0, -9.8f));
 	m_physicsScene->setTimeStep(0.0128f);
 
-	Sphere* ball;
-	ball = new Sphere(glm::vec2(-40, 15), glm::vec2(10, 0), 3.0f, false, 5, 0.2f, 0.2f, 1.0f, glm::vec4(1, 0, 0, 1));
-	m_physicsScene->addActor(ball);
-	
-	Sphere* ball2;
-	ball2 = new Sphere(glm::vec2(0, 15), glm::vec2(-10, 0), 3.0f, false, 5, 0.2f, 0.2f, 1.0f, glm::vec4(1, 1, 0, 1));
-	m_physicsScene->addActor(ball2);
+	//Sphere* ball;
+	//ball = new Sphere(glm::vec2(-40, 20), glm::vec2(10, 0), 3.0f, false, 5, 0.2f, 0.2f, 1.0f, glm::vec4(1, 0, 0, 1));
+	//m_physicsScene->addActor(ball);
+	//
+	//Sphere* ball2;
+	//ball2 = new Sphere(glm::vec2(0, 15), glm::vec2(-10, 0), 3.0f, false, 5, 0.2f, 0.2f, 1.0f, glm::vec4(1, 1, 0, 1));
+	//m_physicsScene->addActor(ball2);
+	//
+	//Sphere* ball3;
+	//ball3 = new Sphere(glm::vec2(15, 20), glm::vec2(-10, 0), 3.0f, false, 5, 0.2f, 0.2f, 1.0f, glm::vec4(0,0, 1, 1));
+	//m_physicsScene->addActor(ball3);
 
-	Sphere* ball3;
-	ball3 = new Sphere(glm::vec2(15, 20), glm::vec2(-10, 0), 3.0f, false, 5, 0.2f, 0.2f, 1.0f, glm::vec4(1, 1, 0, 1));
-	m_physicsScene->addActor(ball3);
+	Box* box1;
+	box1 = new Box(glm::vec2(15, 20), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, 0.2f, 0.2f, 1.0f, glm::vec4(1, 0, 0, 1));
+	m_physicsScene->addActor(box1);
+
+	Box* box2;
+	box2 = new Box(glm::vec2(-10, 20), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, 0.2f, 0.2f, 1.0f, glm::vec4(1, 0, 0, 1));
+	m_physicsScene->addActor(box2);
 
 	Plane* plane1;
-	plane1 = new Plane(glm::vec2(10, 1), 0);
+	plane1 = new Plane(glm::vec2(0.8f, 1), -20);
 	m_physicsScene->addActor(plane1);
 
-	AABB* aabb1;
-	aabb1 = new AABB(glm::vec2(10, 10), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, 0.2f, 0.2f, 1.0f, glm::vec4(0, 1, 0, 1));
-	m_physicsScene->addActor(aabb1);
+	Plane* plane2;
+	plane2 = new Plane(glm::vec2(-0.8f, 1), -20);
+	m_physicsScene->addActor(plane2);
 
-	AABB* aabb2;
-	aabb2 = new AABB(glm::vec2(10, 40), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, 0.2f, 0.2f, 1.0f, glm::vec4(0, 1, 0, 1));
-	m_physicsScene->addActor(aabb2);
+	Plane* plane3;
+	plane3 = new Plane(glm::vec2(0, 1), -20);
+	m_physicsScene->addActor(plane3);
+
+	//AABB* aabb1;
+	//aabb1 = new AABB(glm::vec2(10, 10), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, 0.2f, 0.2f, 1.0f, glm::vec4(0, 1, 0, 1));
+	//m_physicsScene->addActor(aabb1);
+	//
+	//AABB* aabb2;
+	//aabb2 = new AABB(glm::vec2(10, 40), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, 0.2f, 0.2f, 1.0f, glm::vec4(0, 1, 0, 1));
+	//m_physicsScene->addActor(aabb2);
 
 	float radius = 1.0f;
 	float speed = 30;
