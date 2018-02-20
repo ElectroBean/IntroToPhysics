@@ -2,7 +2,6 @@
 #include <glm/ext.hpp>
 #include <vector>
 #include "PhysicsObject.h"
-#include "Imgui.h"
 
 class PhysicsScene
 {
@@ -24,6 +23,8 @@ public:
 	}
 
 	void checkForCollision();
+
+	void DestroyAll();
 
 	static bool plane2Plane(PhysicsObject*, PhysicsObject*);
 	static bool plane2Sphere(PhysicsObject*, PhysicsObject*);

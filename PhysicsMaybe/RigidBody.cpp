@@ -21,48 +21,52 @@ RigidBody::~RigidBody()
 
 void RigidBody::fixedUpdate(glm::vec2 gravity, float timeStep)
 {
-	if (!isKinematic)
+	if (isKinematic)
 	{
-		m_velocity += gravity * timeStep;
-		m_position += m_velocity * timeStep;
+		return;
+	}
 
-		m_velocity -= m_velocity * m_linearDrag * timeStep;
+	m_velocity += gravity * timeStep;
+	m_position += m_velocity * timeStep;
 
-		m_rotation += m_angularVelocity * timeStep;
-		m_angularVelocity -= m_angularVelocity * m_angularDrag * timeStep;
-		
-		//
-		if (length(m_velocity) < 0.1f) 
-		{
-			m_velocity = glm::vec2(0, 0); 
-		}
+	m_velocity -= m_velocity * m_linearDrag * timeStep;
 
-		//angular drag min
-		if (abs(m_angularVelocity) < 0.1f) 
-		{ 
-			m_angularVelocity = 0;
-		}
+	m_rotation += m_angularVelocity * timeStep;
+	m_angularVelocity -= m_angularVelocity * m_angularDrag * timeStep;
 
-		static float aspectRatio = 16 / 9.f;
-		if (m_position.x > 100)
+	//
+	if (length(m_velocity) < 0.1f)
+	{
+		if (length(m_velocity) < length(gravity) * m_linearDrag * timeStep)
 		{
-			m_velocity.x *= -1.0f;
-		}
-		if (m_position.x < -100)
-		{
-			m_velocity.x *= -1.0f;
-		}
-		if (m_position.y > 100 / aspectRatio)
-		{
-			m_velocity.y *= -1.0f;
-		}
-		if (m_position.y < -100 / aspectRatio)
-		{
-			m_velocity.y *= -1.0f;
+			m_velocity = glm::vec2(0, 0);
+
 		}
 	}
 
+	//angular drag min
+	if (abs(m_angularVelocity) < 0.3f)
+	{
+		m_angularVelocity = 0;
+	}
 
+	static float aspectRatio = 16 / 9.f;
+	if (m_position.x > 100)
+	{
+		m_velocity.x *= -1.0f;
+	}
+	if (m_position.x < -100)
+	{
+		m_velocity.x *= -1.0f;
+	}
+	if (m_position.y > 100 / aspectRatio)
+	{
+		m_velocity.y *= -1.0f;
+	}
+	if (m_position.y < -100 / aspectRatio)
+	{
+		m_velocity.y *= -1.0f;
+	}
 
 }
 
@@ -73,7 +77,7 @@ void RigidBody::debug()
 void RigidBody::applyForce(glm::vec2 force, glm::vec2 pos)
 {
 	this->m_velocity += force / this->m_mass;
-	m_angularVelocity += ((force.y * pos.x) - (force.x * pos.y)) / (m_moment); 
+	m_angularVelocity += ((force.y * pos.x) - (force.x * pos.y)) / (m_moment);
 }
 
 
@@ -110,8 +114,8 @@ void RigidBody::ResolveCollision(RigidBody* actor2, glm::vec2 contact, glm::vec2
 
 	float r1 = glm::dot(contact - m_position, -perp);
 	float r2 = glm::dot(contact - actor2->m_position, perp);
-	float v1 = glm::dot(m_velocity, normal) - r1 * m_rotation;
-	float v2 = glm::dot(actor2->m_velocity, normal) + r2 * actor2->m_rotation; 
+	float v1 = glm::dot(m_velocity, normal) - r1 * m_angularVelocity;
+	float v2 = glm::dot(actor2->m_velocity, normal) + r2 * actor2->m_angularVelocity;
 
 	if (v1 > v2)
 	{
@@ -126,6 +130,12 @@ void RigidBody::ResolveCollision(RigidBody* actor2, glm::vec2 contact, glm::vec2
 		applyForce(-force, contact - m_position);
 		actor2->applyForce(force, contact - actor2->m_position);
 	}
+}
+
+glm::vec2 RigidBody::toWorld(glm::vec2 contact)
+{
+
+	return glm::vec2();
 }
 
 

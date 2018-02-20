@@ -24,14 +24,15 @@ public:
 
 	glm::vec2 getCenter() { return this->getPosition(); }
 
-	bool checkBoxCorners(Box & box, glm::vec2 & contact, int & numContacts, float & pen, glm::vec2 & edgeNormal);
+
+	bool checkBoxCorners(Box & box, glm::vec2 & contact, int & numContacts, float & pen, glm::vec2 & edgeNormal, glm::vec2& contactForce);
 
 private:
 
 	glm::vec2 extents;
 	glm::vec4 colour;
 
-	glm::vec2 m_localX;
-	glm::vec2 m_localY;
+	glm::vec2 m_localX = glm::vec2(0, 0);
+	glm::vec2 m_localY = glm::vec2(0, 0);
 };
 

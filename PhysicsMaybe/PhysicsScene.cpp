@@ -48,12 +48,6 @@ void PhysicsScene::update(float dt)
 {
 	static std::list<PhysicsObject*> dirty;
 
-	ImGui::Begin("Physics Options");
-	ImGui::SliderFloat2("Gravity", asdasd, -9.8f, 9.8f);
-	ImGui::SliderFloat("Physics Time Step", &m_timeStep, 0.001f, 1.0f);
-	m_gravity = glm::vec2(asdasd[0], asdasd[1]);
-	ImGui::End();
-
 	// update physics at a fixed time step
 	static float accumulatedTime = 0.0f;
 	accumulatedTime += dt;
@@ -136,6 +130,9 @@ void PhysicsScene::checkForCollision()
 			PhysicsObject* object2 = m_actors[inner];
 			int shapeId1 = object1->getShapeID();
 			int shapeId2 = object2->getShapeID();
+
+			if (shapeId1 < 0 || shapeId2 < 0)
+				continue;
 			// using function pointers 
 			int functionIdx = (shapeId1 * SHAPE_COUNT) + shapeId2;
 			fn collisionFunctionPtr = collisionFunctionArray[functionIdx];
@@ -145,6 +142,14 @@ void PhysicsScene::checkForCollision()
 				collisionFunctionPtr(object1, object2);
 			}
 		}
+	}
+}
+
+void PhysicsScene::DestroyAll()
+{
+	for (auto pActor : m_actors)
+	{
+		removeActor(pActor);
 	}
 }
 
@@ -233,10 +238,11 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
 
 	if (sphere1 != nullptr && sphere2 != nullptr)
 	{
-		glm::vec2 direction = sphere1->getPosition() - sphere2->getPosition();
+		glm::vec2 direction = sphere2->getPosition() - sphere1->getPosition();
 		float mag = glm::length(direction);
 
 		float radiiSum = sphere1->getRadius() + sphere2->getRadius();
+		float intersect = sphere1->getRadius() + sphere2->getRadius() - mag;
 
 		if (mag < radiiSum)
 		{
@@ -264,9 +270,19 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
 
 			glm::vec2 contactForce = 0.5f * (mag - (sphere1->getRadius() + sphere2->getRadius())) * direction / mag;
 
-			sphere1->setPosition(sphere1->getPosition() + contactForce); 
-			sphere2->setPosition(sphere2->getPosition() - contactForce);
-
+			if (!sphere1->getIsKinematic() && !sphere2->getIsKinematic())
+			{
+				sphere1->setPosition(sphere1->getPosition() + contactForce );
+				sphere2->setPosition(sphere2->getPosition() - contactForce );
+			}
+			else if (!sphere1->getIsKinematic())
+			{
+				sphere1->setPosition(sphere1->getPosition() + contactForce);
+			}
+			else
+			{
+				sphere2->setPosition(sphere2->getPosition() - contactForce);
+			}
 
 			//apply forces to actors
 			sphere1->ResolveCollision(sphere2, 0.5f * (sphere1->getPosition() + sphere2->getPosition()));
@@ -298,6 +314,7 @@ bool PhysicsScene::box2Plane(PhysicsObject *obj1, PhysicsObject *obj2)
 		glm::vec2 contact(0, 0);
 		float contactV = 0;
 		float radius = 0.5f * std::fminf(box->getWidth(), box->getHeight());
+		float penetration = 0.0f;
 		// which side is the centre of mass on? 
 		glm::vec2 planeOrigin = plane->getNormal() * plane->getDistance();
 		float comFromPlane = glm::dot(box->getPosition() - planeOrigin, plane->getNormal());
@@ -318,6 +335,21 @@ bool PhysicsScene::box2Plane(PhysicsObject *obj1, PhysicsObject *obj2)
 					numContacts++;
 					contact += p;
 					contactV += velocityIntoPlane;
+
+					if (comFromPlane >= 0)
+					{
+						if (penetration > distFromPlane)
+						{
+							penetration = distFromPlane;
+						}
+						else
+						{
+							if (penetration < distFromPlane)
+							{
+								penetration = distFromPlane;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -339,7 +371,9 @@ bool PhysicsScene::box2Plane(PhysicsObject *obj1, PhysicsObject *obj2)
 			// work out the "effective mass" - this is a combination of moment of // inertia and mass, and tells us how much the contact point velocity // will change with the force we're applying
 			float mass0 = 1.0f / (1.0f / box->getMass() + (r*r) / box->getMoment());
 			// and apply the force 
+			box->setPosition(box->getPosition() - plane->getNormal() * penetration);
 			box->applyForce(acceleration * mass0, localContact);
+
 		}
 	}
 	return false;
@@ -404,8 +438,30 @@ bool PhysicsScene::box2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
 		}
 		if (numContacts > 0)
 		{
+
 			// average, and convert back into world coords 
 			contact = box->getPosition() + (1.0f / numContacts) * (box->getLocalX() *contact.x + box->getLocalY()*contact.y);
+
+
+			glm::vec2 A = contact;
+			glm::vec2 V = A - sphere->getPosition();
+			glm::vec2 normal = glm::normalize(V);
+
+
+			if (!box->getIsKinematic() && !sphere->getIsKinematic())
+			{
+				sphere->setPosition(sphere->getPosition() - normal * (sphere->getRadius() - length(V)));
+				box->setPosition(box->getPosition() + normal * (sphere->getRadius() - length(V)));
+			}
+			else if (!box->getIsKinematic())
+			{
+				box->setPosition(box->getPosition() + normal * (sphere->getRadius() - length(V)));
+			}
+			else
+			{
+				sphere->setPosition(sphere->getPosition() - normal * (sphere->getRadius() - length(V)));
+			}
+
 			box->ResolveCollision(sphere, contact, direction);
 		}
 		delete direction;
@@ -422,20 +478,44 @@ bool PhysicsScene::box2Box(PhysicsObject *obj1, PhysicsObject *obj2)
 	{
 		glm::vec2 boxPos = box2->getCenter() - box1->getCenter();
 		glm::vec2 norm(0, 0);
+		glm::vec2 contactForce1, contactForce2;
 		glm::vec2 contact(0, 0);
 		float pen = 0;
 		int numContacts = 0;
-		box1->checkBoxCorners(*box2, contact, numContacts, pen, norm); 
-		if (box2->checkBoxCorners(*box1, contact, numContacts, pen, norm))
+
+		box1->checkBoxCorners(*box2, contact, numContacts, pen, norm, contactForce1);
+
+		if (box2->checkBoxCorners(*box1, contact, numContacts, pen, norm, contactForce2))
 		{
-			norm = -norm; 
-		} 
-		if (pen > 0) 
-		{ 
-			box1->ResolveCollision(box2, contact / float(numContacts), &norm); 
+			norm = -norm;
 		}
-		return true; 
-	} 
+		if (pen > 0)
+		{
+			box1->ResolveCollision(box2, contact / float(numContacts), &norm);
+		}
+
+		if (numContacts > 0)
+		{
+			glm::vec2 contactForce = 0.5f*(contactForce1 - contactForce2);
+
+			if (!box1->getIsKinematic() && !box2->getIsKinematic())
+			{
+				box1->setPosition(box1->getPosition() - contactForce);
+				box2->setPosition(box2->getPosition() + contactForce);
+			}
+			else if (!box1->getIsKinematic())
+			{
+				box1->setPosition(box1->getPosition() - contactForce);
+			}
+			else
+			{
+				box2->setPosition(box2->getPosition() + contactForce);
+			}
+
+			box1->ResolveCollision(box2, contact / float(numContacts), &norm);
+			return true;
+		}
+	}
 	return false;
 }
 

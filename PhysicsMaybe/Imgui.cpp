@@ -14,22 +14,32 @@ GUI::~GUI()
 {
 }
 
-void GUI::update(float* exhaustTimer, glm::vec2* gravity)
+void GUI::update(float* physTickRate, PhysicsScene* PhysicsScene)
 {
 	ImGui::Begin("My options");
-	float asdasd[2] = { gravity->x, gravity->y };
 
-	if (ImGui::Button("Randomize Colour?"))
+	// Physics Gravity
+	ImGui::InputFloat2("gravity", gravity, -9.8f, 9.8f);
+	if (ImGui::Button("Set Gravity"))
 	{
-		float r = rand() % 2 + 0.1f;
-		float g = rand() % 2 + 0.1f;
-		float b = rand() % 2 + 0.1f;
+		glm::vec2 grav = glm::vec2(gravity[0], gravity[1]);
 
-		m_clearColour = glm::vec4(r, g, b, 1);
+		PhysicsScene->setGravity(grav);
 	}
-	//glClearColor(m_clearColour.r, m_clearColour.g, m_clearColour.b, 1);
-	ImGui::ColorEdit3("clear colour", glm::value_ptr(m_clearColour));
-	//ImGui::SliderFloat("Rocket Exhaust Timer", exhaustTimer, 0.01f, 0.1f);
+
+	// PhysicsTickRate
+	ImGui::InputFloat("tick rate", &tickrate, 1.0f);
+	if (ImGui::Button("Set Tick Rate"))
+	{
+		PhysicsScene->setTimeStep(tickrate);
+	}
+
+	//Destroy all ojects
+	if (ImGui::Button("Destroy all"))
+	{
+		PhysicsScene->DestroyAll();
+	}
+
 	ImGui::End();
 }
 

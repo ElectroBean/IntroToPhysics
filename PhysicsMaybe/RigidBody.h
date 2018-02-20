@@ -16,7 +16,7 @@ public:
 	glm::vec2 getPosition() { return m_position; }
 	float getRotation() { return m_rotation; }
 	glm::vec2 getVelocity() { return m_velocity; }
-	float getMass() { return m_mass; }
+	float getMass() { return (isKinematic) ? INT_MAX : m_mass; }
 	void changeMass(float massChange);
 	void ResolveCollision(RigidBody * actor2, glm::vec2 contact, glm::vec2* collisionNormal = nullptr);
 	void setKinematic(bool aInput) { isKinematic = aInput; }
@@ -26,8 +26,11 @@ public:
 	float getAngularDrag() { return m_angularDrag; }
 	void setAngularDrag(float drag) { m_angularDrag = drag; }
 	float getElasticity() { return m_elasticity; }
+	void setElasticity(float elasticity) { m_elasticity = elasticity; }
 	void setPosition(glm::vec2 position) { m_position = position; }
 	float getMoment() { return m_moment; }
+	bool getIsKinematic() { return isKinematic; }
+	glm::vec2 toWorld(glm::vec2 contact);
 
 protected:
 	glm::vec2 m_position;
