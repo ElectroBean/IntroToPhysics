@@ -47,21 +47,21 @@ bool PhysicsMaybeApp::startup() {
 	//ball3 = new Sphere(glm::vec2(15, 20), glm::vec2(-10, 0), 3.0f, false, 5, 0.2f, 0.2f, 1.0f, glm::vec4(0,0, 1, 1));
 	//m_physicsScene->addActor(ball3);
 
-	//Box* box1;
-	//box1 = new Box(glm::vec2(2, 0), glm::vec2(5, 5), glm::vec2(0, 0), 25.0f, true, 0.2f, 0.2f, 0.0f, glm::vec4(1, 0, 0, 1));
-	//m_physicsScene->addActor(box1);
-	//
-	//Box* box2;
-	//box2 = new Box(glm::vec2(25, 20), glm::vec2(2.5f, 2.5f), glm::vec2(0, 0), 15.625f, false, 0.2f, 0.2f, 0.0f, glm::vec4(1, 0, 0, 1));
-	//m_physicsScene->addActor(box2);
+	Box* box1;
+	box1 = new Box(glm::vec2(2, 0), glm::vec2(5, 5), glm::vec2(0, 0), 25.0f, true, 0.2f, 0.2f, 0.0f, glm::vec4(1, 0, 0, 1));
+	m_physicsScene->addActor(box1);
+	
+	Box* box2;
+	box2 = new Box(glm::vec2(25, 20), glm::vec2(2.5f, 2.5f), glm::vec2(0, 0), 15.625f, false, 0.2f, 0.2f, 0.0f, glm::vec4(1, 0, 0, 1));
+	m_physicsScene->addActor(box2);
 	//
 	//Plane* plane1;
 	//plane1 = new Plane(glm::vec2(1.39f, 1), -30);
 	//m_physicsScene->addActor(plane1);
 	//
-	//Plane* plane2;
-	//plane2 = new Plane(glm::vec2(-1.39f, 1), -30);
-	//m_physicsScene->addActor(plane2);
+	Plane* plane2;
+	plane2 = new Plane(glm::vec2(-1.39f, 1), -30);
+	m_physicsScene->addActor(plane2);
 	//
 	Plane* plane3;
 	plane3 = new Plane(glm::vec2(0, 1), -20);

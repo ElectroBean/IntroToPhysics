@@ -19,26 +19,24 @@ void GUI::update(float* physTickRate, PhysicsScene* PhysicsScene)
 	ImGui::Begin("My options");
 
 	// Physics Gravity
-	ImGui::InputFloat2("gravity", gravity, -9.8f, 9.8f);
-	if (ImGui::Button("Set Gravity"))
-	{
-		glm::vec2 grav = glm::vec2(gravity[0], gravity[1]);
-
-		PhysicsScene->setGravity(grav);
-	}
+	ImGui::SliderFloat2("gravity", gravity, -9.8f, 9.8f);
+	glm::vec2 grav = glm::vec2(gravity[0], gravity[1]);
+	PhysicsScene->setGravity(grav);
 
 	// PhysicsTickRate
-	ImGui::InputFloat("tick rate", &tickrate, 1.0f);
-	if (ImGui::Button("Set Tick Rate"))
-	{
-		PhysicsScene->setTimeStep(tickrate);
-	}
+	ImGui::SliderFloat("tick rate", &tickrate, 0.015f, 1.0f);
+	PhysicsScene->setTimeStep(tickrate);
 
 	//Destroy all ojects
+
+	//needs work
+	//doesnt destroy all objects, just a couple
+	/*
 	if (ImGui::Button("Destroy all"))
 	{
 		PhysicsScene->DestroyAll();
 	}
+	*/
 
 	ImGui::End();
 }
