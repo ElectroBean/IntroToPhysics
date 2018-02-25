@@ -47,12 +47,12 @@ bool PhysicsMaybeApp::startup() {
 	//ball3 = new Sphere(glm::vec2(15, 20), glm::vec2(-10, 0), 3.0f, false, 5, 0.2f, 0.2f, 1.0f, glm::vec4(0,0, 1, 1));
 	//m_physicsScene->addActor(ball3);
 
-	Box* box1;
-	box1 = new Box(glm::vec2(2, 0), glm::vec2(5, 5), glm::vec2(0, 0), 25.0f, true, 0.2f, 0.2f, 0.0f, glm::vec4(1, 0, 0, 1));
-	m_physicsScene->addActor(box1);
+	//Box* box1;
+	//box1 = new Box(glm::vec2(2, 0), glm::vec2(5, 5), glm::vec2(0, 0), 25.0f, true, 0.2f, 0.8f, 0.0f, glm::vec4(1, 0, 0, 1));
+	//m_physicsScene->addActor(box1);
 	
 	Box* box2;
-	box2 = new Box(glm::vec2(25, 20), glm::vec2(2.5f, 2.5f), glm::vec2(0, 0), 15.625f, false, 0.2f, 0.2f, 0.0f, glm::vec4(1, 0, 0, 1));
+	box2 = new Box(glm::vec2(-50, 30), glm::vec2(2.5f, 2.5f), glm::vec2(0, 0), 15.625f, false, 0.2f, 0.8f, 0.0f, glm::vec4(1, 0, 0, 1));
 	m_physicsScene->addActor(box2);
 	//
 	//Plane* plane1;
@@ -60,12 +60,12 @@ bool PhysicsMaybeApp::startup() {
 	//m_physicsScene->addActor(plane1);
 	//
 	Plane* plane2;
-	plane2 = new Plane(glm::vec2(-1.39f, 1), -30);
+	plane2 = new Plane(glm::vec2(0.0872f, 1), -30);
 	m_physicsScene->addActor(plane2);
 	//
-	Plane* plane3;
-	plane3 = new Plane(glm::vec2(0, 1), -20);
-	m_physicsScene->addActor(plane3);
+	//Plane* plane3;
+	//plane3 = new Plane(glm::vec2(0, 1), -20);
+	//m_physicsScene->addActor(plane3);
 
 	//AABB* aabb1;
 	//aabb1 = new AABB(glm::vec2(10, 10), glm::vec2(5, 5), glm::vec2(0, 0), 5.0f, false, 0.2f, 0.2f, 1.0f, glm::vec4(0, 1, 0, 1));
@@ -76,24 +76,24 @@ bool PhysicsMaybeApp::startup() {
 	//m_physicsScene->addActor(aabb2);
 
 
-	int startX = -50;
-	Sphere* ball1;
-	Sphere* ball2;
-	float ballRadius = 2; 
-	float mass = 1; 
-	ball1 = new Sphere(glm::vec2(startX, 40), glm::vec2(0, 0), mass, false, ballRadius, 0.2f, 0.2f, 1.0f, glm::vec4(1, 1, 1, 1));
-	ball1->setElasticity(0.9f);
-	ball1->setKinematic(true);
-	m_physicsScene->addActor(ball1);
-	int numberBalls = 10;
-	for (int i = 1; i < numberBalls; i++) 
-	{
-		ball2 = new Sphere(glm::vec2(startX + i * 6.0f, 40), 0, 0, mass, false, ballRadius, 0.2f, 0.2f, 1.0f, glm::vec4(1, 1, 1, 1));
-		ball2->setElasticity(0.9f);
-		m_physicsScene->addActor(ball2);
-		m_physicsScene->addActor(new Spring(ball1, ball2, 5, 10, 0.1f));
-		ball1 = ball2;
-	}
+	//int startX = -50;
+	//Sphere* ball1;
+	//Sphere* ball2;
+	//float ballRadius = 2; 
+	//float mass = 1; 
+	//ball1 = new Sphere(glm::vec2(startX, 40), glm::vec2(0, 0), mass, false, ballRadius, 0.2f, 0.2f, 1.0f, glm::vec4(1, 1, 1, 1));
+	//ball1->setElasticity(0.9f);
+	//ball1->setKinematic(true);
+	//m_physicsScene->addActor(ball1);
+	//int numberBalls = 10;
+	//for (int i = 1; i < numberBalls; i++) 
+	//{
+	//	ball2 = new Sphere(glm::vec2(startX + i * 6.0f, 40), 0, 0, mass, false, ballRadius, 0.2f, 0.2f, 1.0f, glm::vec4(1, 1, 1, 1));
+	//	ball2->setElasticity(0.9f);
+	//	m_physicsScene->addActor(ball2);
+	//	m_physicsScene->addActor(new Spring(ball1, ball2, 5, 10, 0.1f));
+	//	ball1 = ball2;
+	//}
 
 
 
