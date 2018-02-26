@@ -26,7 +26,7 @@ void Plane3D::fixedUpdate(glm::vec3 gravity, float timeStep)
 void Plane3D::makeGizmo()
 {
 	glm::vec3 planeNorm = glm::normalize(m_normal);
-	glm::mat4 rotation = glm::lookAt(glm::vec3(0), planeNorm, glm::vec3(0, 0, 1));
+	glm::mat4 rotation = glm::lookAt(glm::vec3(0), glm::vec3(0), planeNorm);
 	rotation[3] = glm::vec4(planeNorm * m_distanceToOrigin, 1);
 
 	aie::Gizmos::addDisk(glm::vec3(0), 5, 4, glm::vec4(1, 1, 0, 0.5), &rotation);
