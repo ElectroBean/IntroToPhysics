@@ -12,6 +12,7 @@ class PhysicsObject3D
 
 protected:
 	PhysicsObject3D(ShapeType a_shapeID) : m_shapeID(a_shapeID) {}
+	~PhysicsObject3D();
 
 public:
 	PhysicsObject3D();

@@ -45,7 +45,7 @@ void RigidBody::fixedUpdate(glm::vec2 gravity, float timeStep)
 	}
 
 	//angular drag min
-	if (abs(m_angularVelocity) < 0.3f)
+	if (abs(m_angularVelocity) < 0.1f)
 	{
 		m_angularVelocity = 0;
 	}

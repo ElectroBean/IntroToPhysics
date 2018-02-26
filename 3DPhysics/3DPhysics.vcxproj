@@ -88,7 +88,7 @@
     <OutDir>$(SolutionDir)temp\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)temp\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)bootstrap;$(SolutionDir)dependencies/imgui;$(SolutionDir)dependencies/glm;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)temp\bootstrap\$(Configuration);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <LibraryPath>$(SolutionDir)temp\bootstrap\$(Platform)\$(Configuration);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -162,14 +162,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Box3D.cpp" />
     <ClCompile Include="PhysicsObject3D.cpp" />
+    <ClCompile Include="PhysicsScene3D.cpp" />
+    <ClCompile Include="Plane3D.cpp" />
     <ClCompile Include="RigidBody3D.cpp" />
+    <ClCompile Include="Sphere3D.cpp" />
     <ClCompile Include="_3DPhysicsApp.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Box3D.h" />
     <ClInclude Include="PhysicsObject3D.h" />
+    <ClInclude Include="PhysicsScene3D.h" />
+    <ClInclude Include="Plane3D.h" />
     <ClInclude Include="RigidBody3D.h" />
+    <ClInclude Include="Sphere3D.h" />
     <ClInclude Include="_3DPhysicsApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

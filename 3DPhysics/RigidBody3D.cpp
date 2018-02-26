@@ -1,7 +1,8 @@
 #include "RigidBody3D.h"
+#include <glm\ext.hpp>
 
 
-
+#define angularVel 0.1
 RigidBody3D::RigidBody3D(ShapeType shapeID, glm::vec3 position,
 	glm::vec3 velocity, glm::vec3 rotation, float mass, bool kinematic, float linearDrag, float angularDrag, float elasticity) :
 	PhysicsObject3D(shapeID), m_position(position),m_velocity(velocity), m_rotation(rotation), m_mass(mass), isKinematic(kinematic)
@@ -13,6 +14,7 @@ RigidBody3D::RigidBody3D(ShapeType shapeID, glm::vec3 position,
 	m_linearDrag = linearDrag;
 	m_angularDrag = angularDrag;
 	m_elasticity = elasticity;
+	m_angularVelocity = glm::vec3();
 }
 
 
@@ -39,9 +41,10 @@ void RigidBody3D::fixedUpdate(glm::vec3 gravity, float timeStep)
 		}
 
 		//angular drag min
-		if (abs(m_angularVelocity) < 0.1f)
+		//float absolute = (m_angularVelocity);
+		if (glm::length(m_angularVelocity) < 0.1f)
 		{
-			m_angularVelocity = 0;
+			m_angularVelocity = glm::vec3();
 		}
 
 		static float aspectRatio = 16 / 9.f;
@@ -100,10 +103,10 @@ void RigidBody3D::ResolveCollision(RigidBody3D* actor2, glm::vec3 contact, glm::
 
 	float r1 = glm::dot(contact - m_position, -perp);
 	float r2 = glm::dot(contact - actor2->m_position, perp);
-	float v1 = glm::dot(m_velocity, normal) - r1 * m_rotation;
-	float v2 = glm::dot(actor2->m_velocity, normal) + r2 * actor2->m_rotation;
+	glm::vec3 v1 = glm::dot(m_velocity, normal) - r1 * m_angularVelocity;
+	glm::vec3 v2 = glm::dot(actor2->m_velocity, normal) + r2 * actor2->m_angularVelocity;
 
-	if (v1 > v2)
+	if (glm::length(v1) > glm::length(v2))
 	{
 		float mass1 = 1.0f / (1.0f / m_mass + (r1 * r1) / m_moment);
 		float mass2 = 1.0f / (1.0f / actor2->m_mass + (r2 * r2) / actor2->m_moment);

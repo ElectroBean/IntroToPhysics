@@ -54,11 +54,13 @@ bool PhysicsMaybeApp::startup() {
 	Box* box2;
 	box2 = new Box(glm::vec2(25, 20), glm::vec2(2.5f, 2.5f), glm::vec2(0, 0), 15.625f, false, 0.2f, 0.2f, 0.0f, glm::vec4(1, 0, 0, 1));
 	m_physicsScene->addActor(box2);
-	//
+
+	
 	//Plane* plane1;
 	//plane1 = new Plane(glm::vec2(1.39f, 1), -30);
 	//m_physicsScene->addActor(plane1);
-	//
+	
+
 	Plane* plane2;
 	plane2 = new Plane(glm::vec2(-1.39f, 1), -30);
 	m_physicsScene->addActor(plane2);

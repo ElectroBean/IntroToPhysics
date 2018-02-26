@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include <glm/mat4x4.hpp>
+#include "PhysicsScene3D.h"
 
 class _3DPhysicsApp : public aie::Application {
 public:
@@ -20,4 +21,7 @@ protected:
 	// camera transforms
 	glm::mat4	m_viewMatrix;
 	glm::mat4	m_projectionMatrix;
+
+	PhysicsScene3D* m_physicsScene3D;
+
 };

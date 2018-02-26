@@ -1,5 +1,8 @@
 #pragma once
 #include "PhysicsObject3D.h"
+#include <glm\ext.hpp>
+#include <Gizmos.h>
+
 class RigidBody3D :
 	public PhysicsObject3D
 {
@@ -26,13 +29,14 @@ public:
 	float getElasticity() { return m_elasticity; }
 	void setPosition(glm::vec3 position) { m_position = position; }
 	float getMoment() { return m_moment; }
+	bool getIsKinematic() { return isKinematic; }
 
-private:
+protected:
 	glm::vec3 m_position;
 	glm::vec3 m_velocity;
 	float m_mass;
 	glm::vec3 m_rotation; //2D so we only need a single float to represent our rotation
-	float m_angularVelocity;
+	glm::vec3 m_angularVelocity;
 	float m_moment; //how much it is rotated in radians
 	bool isKinematic;
 
