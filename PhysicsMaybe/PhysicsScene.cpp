@@ -372,6 +372,15 @@ bool PhysicsScene::box2Plane(PhysicsObject *obj1, PhysicsObject *obj2)
 			// work out the "effective mass" - this is a combination of moment of // inertia and mass, and tells us how much the contact point velocity // will change with the force we're applying
 			float mass0 = 1.0f / (1.0f / box->getMass() + (r*r) / box->getMoment());
 			// and apply the force 
+<<<<<<< HEAD
+=======
+
+
+			//glm::vec2 A = contact;
+			//glm::vec2 V = A - box->getPosition();
+
+			box->setPosition(box->getPosition() - plane->getNormal() * (penetration /*- length(V)*/));
+>>>>>>> 65e79722b70b3cbd38fa0c917f4bbf34e65529f3
 			box->applyForce(acceleration * mass0, localContact);
 			box->setPosition(box->getPosition() - plane->getNormal() * penetration);
 		
