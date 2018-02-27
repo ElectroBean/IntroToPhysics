@@ -1,4 +1,7 @@
+#define _CRTDBG_MAP_ALLOC
 #include "PhysicsMaybeApp.h"
+#include <stdlib.h>
+#include <crtdbg.h>
 
 int main() {
 	

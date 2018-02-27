@@ -32,6 +32,7 @@ public:
 	bool getIsKinematic() { return isKinematic; }
 
 protected:
+	glm::mat4 rotation;
 	glm::vec3 m_position;
 	glm::vec3 m_velocity;
 	float m_mass;

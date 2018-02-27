@@ -22,7 +22,7 @@ public:
 
 	void fixedUpdate(glm::vec3 gravity, float timeStep);
 
-	glm::vec2 getCenter() { return this->getPosition(); }
+	glm::vec3 getCenter() { return this->getPosition(); }
 
 
 	bool checkBoxCorners(Box3D & box, glm::vec3 & contact, int & numContacts, float & pen, glm::vec3 & edgeNormal, glm::vec3& contactForce);
@@ -34,5 +34,6 @@ private:
 
 	glm::vec3 m_localX = glm::vec3(0, 0, 0);
 	glm::vec3 m_localY = glm::vec3(0, 0, 0);
+	glm::vec3 m_localZ = glm::vec3(0, 0, 0);
 };
 

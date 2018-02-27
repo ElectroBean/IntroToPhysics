@@ -45,8 +45,12 @@ bool _3DPhysicsApp::startup() {
 	m_physicsScene3D->addActor(sphere3D);
 
 	Box3D* box3D;
-	box3D = new Box3D(glm::vec3(0, 5, 0), glm::vec3(1, 1, 1), glm::vec3(), 10.0f, false, 0.1f, 0.1f, 0.0f, glm::vec4(0, 1, 0, 1));
+	box3D = new Box3D(glm::vec3(0, 5, 0), glm::vec3(1, 1, 1), glm::vec3(), 10.0f, false, 0.1f, 0.1f, 1.0f, glm::vec4(0, 1, 0, 1));
 	m_physicsScene3D->addActor(box3D);
+
+	Box3D* box3D2;
+	box3D2 = new Box3D(glm::vec3(0, 10, 0), glm::vec3(0.5, 0.5, 0.5), glm::vec3(), 10.0f, false, 0.1f, 0.1f, 1.0f, glm::vec4(0, 1, 0, 1));
+	m_physicsScene3D->addActor(box3D2);
 
 	return true;
 }
