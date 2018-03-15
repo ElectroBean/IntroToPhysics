@@ -184,22 +184,22 @@ bool PhysicsScene::plane2aabb(PhysicsObject *obj1, PhysicsObject *obj2)
 	if (glm::dot(bottomLeft, plane->getNormal()) - plane->getDistance() < 0)
 	{
 		//plane->ResolveCollision(aabb);
-		//aabb->setVelocity(glm::vec2(0, 0));
+		aabb->setVelocity(glm::vec2(0, 0));
 	}
 	else if (glm::dot(bottomRight, plane->getNormal()) - plane->getDistance() < 0)
 	{
 		//plane->ResolveCollision(aabb);
-		//aabb->setVelocity(glm::vec2(0, 0));
+		aabb->setVelocity(glm::vec2(0, 0));
 	}
 	else if (glm::dot(topLeft, plane->getNormal()) - plane->getDistance() < 0)
 	{
 		//plane->ResolveCollision(aabb);
-		//aabb->setVelocity(glm::vec2(0, 0));
+		aabb->setVelocity(glm::vec2(0, 0));
 	}
 	else if (glm::dot(topRight, plane->getNormal()) - plane->getDistance() < 0)
 	{
 		//plane->ResolveCollision(aabb);
-		//aabb->setVelocity(glm::vec2(0, 0));
+		aabb->setVelocity(glm::vec2(0, 0));
 	}
 
 	return false;
@@ -384,153 +384,153 @@ bool PhysicsScene::box2Plane(PhysicsObject *obj1, PhysicsObject *obj2)
 	//	}
 	//}
 
-	//if (box != nullptr && plane != nullptr) {
+	if (box != nullptr && plane != nullptr) {
+	
+		int numContacts = 0;
+		glm::vec2 contact(0, 0);
+		float contactV = 0;
+		float radius = 0.5f * fminf(box->getWidth(), box->getHeight());
+		float penetration = 0;
+	
+		// Which side is the center of mass on?
+		glm::vec2 planeOrigin = plane->getNormal() * plane->getDistance();
+		float comFromPlane = glm::dot(box->getPosition() - planeOrigin, plane->getNormal());
+		// Check all four corners to see if it has hit the plane
+		for (float x = -box->getExtents().x; x <= box->getWidth(); x += box->getWidth()) {
+	
+			for (float y = -box->getExtents().y; y <= box->getHeight(); y += box->getHeight()) {
+	
+				// Get the position of the corner in world space
+				glm::vec2 p = box->getPosition() + x * box->getLocalX() + y * box->getLocalY();
+	
+				float distFromPlane = glm::dot(p - planeOrigin, plane->getNormal());
+	
+				// This is the total velocity of the point
+				float velocityIntoPlane = dot(box->getVelocity() + box->getRotation() *
+					(-y * box->getLocalY() + x * box->getLocalY()), plane->getNormal());
+	
+				// If this corner is on the opposite side from the COM
+			// and is moving further in, we need to resolve the collision
+				if ((distFromPlane > 0 && comFromPlane < 0 && velocityIntoPlane >= 0) ||
+					(distFromPlane < 0 && comFromPlane > 0 && velocityIntoPlane <= 0)) {
+	
+					numContacts++;
+					contact += p;
+					contactV += velocityIntoPlane;
+	
+					if (comFromPlane >= 0) {
+	
+						if (penetration > distFromPlane) penetration = distFromPlane;
+					}
+	
+					else {
+	
+						if (penetration < distFromPlane) penetration = distFromPlane;
+					}
+				}
+			}
+		}
+		// We've had a hit - typically only two corners can make contact
+		if (numContacts > 0) {
+	
+			// Get the average collision velocity into the plane
+		// (covers linear and rotational velocity of all corners involved)
+			float collisionV = contactV / float(numContacts);
+	
+			// Get the acceleration required to stop (restitution = 0) or reverse
+		// (restitution = 1) the average velocity into the plane
+			glm::vec2 acceleration = -plane->getNormal() * ((1.0f + box->getElasticity()) * collisionV);
+	
+			// And the average position at which we'll apply the force
+		// (corner or edge center)
+			glm::vec2 localContact = (contact / float(numContacts)) - box->getPosition();
+	
+			// This is the perpendicular distance we apply the force at relative to 
+		// the COM, so Torque = F*r
+			float r = glm::dot(localContact, glm::vec2(plane->getNormal().y, plane->getNormal().x));
+	
+			// Work out the "effective mass" - this is a combination of moment of
+		// inertia & mass and tells us how much the cotact point velocity
+		// will change with the force we're applying
+			float mass = 1.0f / (1.0f / box->getMass() + (r * r) / box->getMoment());
+	
+			// Apply the force
+			box->setPosition(box->getPosition() - plane->getNormal() * penetration);
+			box->applyForce(acceleration * mass, localContact);
+			return true;
+		}
+	}
 	//
+	//// No collision
+
+	//if (box != nullptr && plane != nullptr) {
 	//	int numContacts = 0;
 	//	glm::vec2 contact(0, 0);
 	//	float contactV = 0;
-	//	float radius = 0.5f * fminf(box->getWidth(), box->getHeight());
+	//	float radius = 0.5f * std::fminf(box->getWidth(), box->getHeight());
 	//	float penetration = 0;
 	//
-	//	// Which side is the center of mass on?
+	//	// which side is the centre of mass on? 
 	//	glm::vec2 planeOrigin = plane->getNormal() * plane->getDistance();
 	//	float comFromPlane = glm::dot(box->getPosition() - planeOrigin, plane->getNormal());
-	//	// Check all four corners to see if it has hit the plane
-	//	for (float x = -box->getExtents().x; x <= box->getWidth(); x += box->getWidth()) {
-	//
-	//		for (float y = -box->getExtents().y; y <= box->getHeight(); y += box->getHeight()) {
-	//
-	//			// Get the position of the corner in world space
+	//	// check all four corners to see if we've hit the plane
+	//	for (float x = -box->getExtents().x; x < box->getWidth(); x += box->getWidth())
+	//	{
+	//		for (float y = -box->getExtents().y; y < box->getHeight(); y += box->getHeight())
+	//		{
+	//			// get the position of the corner in world space 
 	//			glm::vec2 p = box->getPosition() + x * box->getLocalX() + y * box->getLocalY();
-	//
 	//			float distFromPlane = glm::dot(p - planeOrigin, plane->getNormal());
+	//			// this is the total velocity of the point
 	//
-	//			// This is the total velocity of the point
-	//			float velocityIntoPlane = dot(box->getVelocity() + box->getRotation() *
-	//				(-y * box->getLocalY() + x * box->getLocalY()), plane->getNormal());
-	//
-	//			// If this corner is on the opposite side from the COM
-	//		// and is moving further in, we need to resolve the collision
-	//			if ((distFromPlane > 0 && comFromPlane < 0 && velocityIntoPlane >= 0) ||
-	//				(distFromPlane < 0 && comFromPlane > 0 && velocityIntoPlane <= 0)) {
-	//
+	//			float velocityIntoPlane = glm::dot(box->getVelocity() + box->getRotation() * (-y * box->getLocalX() + x * box->getLocalY()), plane->getNormal());
+	//			// if this corner is on the opposite side from the COM, 
+				// and moving further in, we need to resolve the collision
+	//			if ((distFromPlane > 0 && comFromPlane < 0 && velocityIntoPlane >= 0) || 
+	//				(distFromPlane < 0 && comFromPlane > 0 && velocityIntoPlane <= 0))
+	//			{
 	//				numContacts++;
 	//				contact += p;
 	//				contactV += velocityIntoPlane;
 	//
-	//				if (comFromPlane >= 0) {
-	//
-	//					if (penetration > distFromPlane) penetration = distFromPlane;
+	//				if (comFromPlane >= 0)
+	//				{
+	//					if (penetration > distFromPlane)
+	//						penetration = distFromPlane;
+	//				}
+	//				else
+	//				{
+	//					if (penetration < distFromPlane)
+	//						penetration = distFromPlane;
 	//				}
 	//
-	//				else {
-	//
-	//					if (penetration < distFromPlane) penetration = distFromPlane;
-	//				}
 	//			}
 	//		}
 	//	}
-	//	// We've had a hit - typically only two corners can make contact
-	//	if (numContacts > 0) {
-	//
-	//		// Get the average collision velocity into the plane
-	//	// (covers linear and rotational velocity of all corners involved)
-	//		float collisionV = contactV / float(numContacts);
-	//
-	//		// Get the acceleration required to stop (restitution = 0) or reverse
-	//	// (restitution = 1) the average velocity into the plane
-	//		glm::vec2 acceleration = -plane->getNormal() * ((1.0f + box->getElasticity()) * collisionV);
-	//
-	//		// And the average position at which we'll apply the force
-	//	// (corner or edge center)
-	//		glm::vec2 localContact = (contact / float(numContacts)) - box->getPosition();
-	//
-	//		// This is the perpendicular distance we apply the force at relative to 
-	//	// the COM, so Torque = F*r
-	//		float r = glm::dot(localContact, glm::vec2(plane->getNormal().y, plane->getNormal().x));
-	//
-	//		// Work out the "effective mass" - this is a combination of moment of
-	//	// inertia & mass and tells us how much the cotact point velocity
-	//	// will change with the force we're applying
-	//		float mass = 1.0f / (1.0f / box->getMass() + (r * r) / box->getMoment());
-	//
-	//		// Apply the force
-	//		box->setPosition(box->getPosition() - plane->getNormal() * penetration);
-	//		box->applyForce(acceleration * mass, localContact);
-	//		return true;
-	//	}
-	//}
-	//
-	//// No collision
-
-	if (box != nullptr && plane != nullptr) {
-		int numContacts = 0;
-		glm::vec2 contact(0, 0);
-		float contactV = 0;
-		float radius = 0.5f * std::fminf(box->getWidth(), box->getHeight());
-		float penetration = 0;
-
-		// which side is the centre of mass on? 
-		glm::vec2 planeOrigin = plane->getNormal() * plane->getDistance();
-		float comFromPlane = glm::dot(box->getPosition() - planeOrigin, plane->getNormal());
-		// check all four corners to see if we've hit the plane
-		for (float x = -box->getExtents().x; x < box->getWidth(); x += box->getWidth())
-		{
-			for (float y = -box->getExtents().y; y < box->getHeight(); y += box->getHeight())
-			{
-				// get the position of the corner in world space 
-				glm::vec2 p = box->getPosition() + x * box->getLocalX() + y * box->getLocalY();
-				float distFromPlane = glm::dot(p - planeOrigin, plane->getNormal());
-				// this is the total velocity of the point
-
-				float velocityIntoPlane = glm::dot(box->getVelocity() + box->getRotation() * (-y * box->getLocalX() + x * box->getLocalY()), plane->getNormal());
-				// if this corner is on the opposite side from the COM, 
-				// and moving further in, we need to resolve the collision
-				if ((distFromPlane > 0 && comFromPlane < 0 && velocityIntoPlane >= 0) || 
-					(distFromPlane < 0 && comFromPlane > 0 && velocityIntoPlane <= 0))
-				{
-					numContacts++;
-					contact += p;
-					contactV += velocityIntoPlane;
-
-					if (comFromPlane >= 0)
-					{
-						if (penetration > distFromPlane)
-							penetration = distFromPlane;
-					}
-					else
-					{
-						if (penetration < distFromPlane)
-							penetration = distFromPlane;
-					}
-
-				}
-			}
-		}
-		// we've had a hit - typically only two corners can contact 
-		if (numContacts > 0)
-		{
-			// get the average collision velocity into the plane
+	//	// we've had a hit - typically only two corners can contact 
+	//	if (numContacts > 0)
+	//	{
+	//		// get the average collision velocity into the plane
 			// (covers linear and rotational velocity of all corners involved) 
-			float collisionV = contactV / (float)numContacts;
-			// get the acceleration required to stop (restitution = 0) or reverse
+	//		float collisionV = contactV / (float)numContacts;
+	//		// get the acceleration required to stop (restitution = 0) or reverse
 			// (restitution = 1) the average velocity into the plane 
-			glm::vec2 acceleration = -plane->getNormal() * ((1.0f + box->getElasticity()) * collisionV);
-			// and the average position at which we'll apply the force 
+	//		glm::vec2 acceleration = -plane->getNormal() * ((1.0f + box->getElasticity()) * collisionV);
+	//		// and the average position at which we'll apply the force 
 			// (corner or edge centre) 
-			glm::vec2 localContact = (contact / (float)numContacts) - box->getPosition();
-			// this is the perpendicular distance we apply the force at relative to
+	//		glm::vec2 localContact = (contact / (float)numContacts) - box->getPosition();
+	//		// this is the perpendicular distance we apply the force at relative to
 			// the COM, so Torque = F*r 
-			float r = glm::dot(localContact, glm::vec2(plane->getNormal().y, -plane->getNormal().x));
-			// work out the "effective mass" - this is a combination of moment of
+	//		float r = glm::dot(localContact, glm::vec2(plane->getNormal().y, -plane->getNormal().x));
+	//		// work out the "effective mass" - this is a combination of moment of
 			// inertia and mass, and tells us how much the contact point velocity 
 			// will change with the force we're applying 
-			float mass0 = 1.0f / (1.0f / box->getMass() + (r*r) / box->getMoment());
-			// and apply the force 
-			box->applyForce(acceleration * mass0, localContact);
-			box->setPosition(box->getPosition() - plane->getNormal() * penetration);
-		}
-	}
+	//		float mass0 = 1.0f / (1.0f / box->getMass() + (r*r) / box->getMoment());
+	//		// and apply the force 
+	//		box->applyForce(acceleration * mass0, localContact);
+	//		box->setPosition(box->getPosition() - plane->getNormal() * penetration);
+	//	}
+	//}
 	return false;
 }
 
@@ -679,8 +679,9 @@ bool PhysicsScene::box2aabb(PhysicsObject *, PhysicsObject *)
 	return false;
 }
 
-bool PhysicsScene::aabb2Plane(PhysicsObject *, PhysicsObject *)
+bool PhysicsScene::aabb2Plane(PhysicsObject *obj1, PhysicsObject *obj2)
 {
+	plane2aabb(obj2, obj1);
 	return false;
 }
 
